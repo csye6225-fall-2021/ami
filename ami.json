@@ -1,0 +1,49 @@
+{
+  "variables": {
+    "aws_access_key": "${aws_access_key}",
+    "aws_secret_key": "${aws_secret_key}",
+    "ami_region" :"${ami_region}",
+    "source_ami":"${source_ami}",
+    "instance_type": "${instance_type}",
+    "name": "csye6225-{{timestamp}}"
+ 
+    
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "{{user `ami_region`}}",
+    "source_ami": "{{user `source_ami`}}",
+    "instance_type": "{{user `instance_type`}}",
+    "ssh_username": "ubuntu",
+    "ami_name": "{{user `name`}}",
+    "ami_description": "AMI ubuntu test",
+    "associate_public_ip_address": true,
+    "ami_users": "570209734344",
+    "launch_block_device_mappings":[{
+      "device_name" : "/dev/sda1",
+      "volume_size": 8,
+      "volume_type": "gp2",
+      "delete_on_termination": true
+
+    }],
+    "tags": {
+      "Name": "{{user `name`}}"
+    }
+   
+
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "inline":[
+      "sudo apt-get update",
+      "curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -",
+      "sudo apt install nodejs",
+      "node --version"
+     
+    ]
+   
+ 
+  }]
+}
